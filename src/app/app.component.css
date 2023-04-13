@@ -1,0 +1,36 @@
+.schedule {
+    display: flex;
+    height: 100%;
+}
+
+.day-column {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 100%;
+    position: relative;
+}
+
+.day {
+    min-height: 60px;
+    min-width: 60px;
+    border-bottom:1px solid #eae7ec;
+    border-left: 1px solid #eae7ec;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.timeslot {
+    flex: 1 0 0;
+    z-index: 100;
+}
+
+.task-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-left: 1px;
+    margin-right: 0px;
+}
