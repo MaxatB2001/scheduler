@@ -1,12 +1,12 @@
 <div class="schedule">
   <div class="day-column" *ngFor="let day of days">
     <div class="day" *ngFor="let hour of hours">
-      <div class="timeslot" *ngFor="let timeslot of timeslotCount"></div>
+      <div class="timeslot" *ngFor="let timeslot of timeslotCount; let i = index" (mousedown)="addTask($event, day, hour, i)"></div>
     </div>
-    <div class="task-container">
-      <ng-container *ngFor="let task of tasks">
-        <task [task]="task" [day]="day"  *ngIf="compareDate(task, day)"></task>
-      </ng-container>
-    </div>
+      <div class="task-container">
+        <ng-container *ngFor="let task of tasks">
+          <task [task]="task" [day]="day"  *ngIf="compareDate(task, day)"></task>
+        </ng-container>
+      </div>
   </div>
 </div>
