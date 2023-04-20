@@ -4,6 +4,8 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Task } from 'src/app/models/Task.model';
@@ -15,20 +17,19 @@ import interact from 'interactjs';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
 })
-export class TaskComponent implements AfterViewInit {
+export class TaskComponent implements AfterViewInit, OnChanges {
   @Input() task!: Task;
   @Input() day: any;
   @ViewChild('taskk')
   ref!: ElementRef;
 
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
+  }
+
   ngAfterViewInit(): void {
     
     setTimeout(() => {
-      console.log(
-        this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode
-          .parentNode
-      );
-
       interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
@@ -37,6 +38,10 @@ export class TaskComponent implements AfterViewInit {
               targets: [interact.snappers.grid({ x: 30, y: 30 })],
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],
+              origin: {
+                x: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetLeft,
+                y: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetTop
+              }
             }),
             interact.modifiers.restrictSize({
               min: { width: this.ref.nativeElement.offsetWidth, height: 30 },
@@ -76,7 +81,24 @@ export class TaskComponent implements AfterViewInit {
         })
         .draggable({
           listeners: {
-            move: (window as any).dragMoveListener,
+            move: (event) => {
+                var target = event.target,
+                  // keep the dragged position in the data-x/data-y attributes
+                  x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                  y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                console.log(event.dx);
+                console.log(event.dy);
+                
+              console.log(target);
+                  
+                // translate the element
+                target.style.webkitTransform = target.style.transform =
+                  'translate(' + x + 'px, ' + y + 'px)';
+            
+                // update the posiion attributes
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            },
             end: (event) => {
               console.log(event);
             },
@@ -91,6 +113,10 @@ export class TaskComponent implements AfterViewInit {
               ],
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],
+              origin: {
+                x: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetLeft,
+                y: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetTop
+              }
             }),
             interact.modifiers.restrict({
               restriction:
@@ -100,7 +126,8 @@ export class TaskComponent implements AfterViewInit {
               endOnly: true,
             }),
           ],
-          inertia: true,
+          inertia: false,
+          autoScroll: true
           // autoScroll: {
           //   container: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode,
           //   margin: 50,

@@ -15,30 +15,16 @@ export class AppComponent implements OnInit {
   timeslotCount: number[] = [1, 2];
   tasks: Task[] = mockTasks;
 
-  dragMoveListener(event: any) {
-    var target = event.target,
-      // keep the dragged position in the data-x/data-y attributes
-      x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-      y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-    // translate the element
-    target.style.webkitTransform = target.style.transform =
-      'translate(' + x + 'px, ' + y + 'px)';
-
-    // update the posiion attributes
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
-  }
-
   constructor(private dateService: DateService) {}
 
   ngOnInit(): void {
-    (window as any).dragMoveListener = this.dragMoveListener;
     this.days = this.dateService.getCurrentWeek();
     this.hours = Array(24)
       .fill(1)
       .map((x, i) => ++i);
-    console.log(this.hours);
+    this.days.map(d => {
+      console.log(d.format("MMMM"))
+    })
   }
 
   onClick(time: Date) {
@@ -51,13 +37,19 @@ export class AppComponent implements OnInit {
     return moment(task.date).date() == day.date();
   }
 
+  formatHours(hours: number) {
+    return moment.utc(hours*3600*1000).format('HH:mm')
+  }
+
   addTask($event: MouseEvent, day: any, duration: any, timeSlotIndex: any) {
+    console.log(day);
+    console.log(duration);
+    
+    
     let totalMinutes;
     totalMinutes = duration * 30 * 2 - 30;
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    console.log(minutes);
-    console.log(hours);
     let date =
       timeSlotIndex == 0
         ? new Date(moment().year(), moment().month() + 1, day.date(), hours)
@@ -96,5 +88,14 @@ export class AppComponent implements OnInit {
 
     window.addEventListener("mousemove", move)
     window.addEventListener("mouseup", up, {once: true})
+  }
+
+  changeTasks() {
+    this.tasks.push({
+      id: 111,
+      title: "new Taska",
+      duration: 60,
+      date: new Date(2023, 4, 17, 0)
+  },)
   }
 }
