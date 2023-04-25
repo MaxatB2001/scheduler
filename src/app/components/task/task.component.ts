@@ -30,7 +30,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    
+
     setTimeout(() => {
       this.interactable = interact(this.ref.nativeElement)
         .resizable({
@@ -64,7 +64,6 @@ export class TaskComponent implements AfterViewInit, OnChanges {
             y = parseFloat(target.getAttribute('data-y')) || 0;
 
           // update the element's style
-          target.style.width = event.rect.width + 'px';
           target.style.height = event.rect.height + 'px';
 
           // translate when resizing from top or left edges
@@ -88,13 +87,8 @@ export class TaskComponent implements AfterViewInit, OnChanges {
                   // keep the dragged position in the data-x/data-y attributes
                   x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
                   y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                  this.interactable.options.drag.snap.targets = interact.createSnapGrid({
-                    x: 100,
-                    y: 30
-                  })
-              
                 
-              console.log(this.interactable.options.drag.snap.targets);
+              console.log(this.interactable.options.drag.modifiers[0].options.targets);
                   
                 // translate the element
                 target.style.webkitTransform = target.style.transform =
@@ -115,7 +109,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
                 //   x: this.ref.nativeElement.offsetWidth,
                 //   y: 30,
                 // }),
-                interact.createSnapGrid({x: 160, y: 30})
+                interact.createSnapGrid({x: this.ref.nativeElement.offsetWidth, y: 30})
               ],
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],
@@ -142,7 +136,13 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           //   speed: 300,
           // },
         });
-    });
+    
+        const out = () => {
+          this.interactable.options.drag.modifiers[0].options.targets = [ interact.createSnapGrid({x: this.ref.nativeElement.offsetWidth, y: 30})]
+        }
+        out()
+        new ResizeObserver(out).observe(this.ref.nativeElement)
+      });
   }
 
   calculateTop() {
