@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   hours: number[] = [];
   timeslotCount: number[] = [1, 2];
   tasks: Task[] = mockTasks;
+  opened: boolean = false
 
   constructor(private dateService: DateService) {}
 

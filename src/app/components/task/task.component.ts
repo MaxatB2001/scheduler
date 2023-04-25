@@ -11,6 +11,8 @@ import {
 import { Task } from 'src/app/models/Task.model';
 import * as moment from 'moment';
 import interact from 'interactjs';
+import { Interactable } from '@interactjs/types';
+import { Modifier } from '@interactjs/modifiers/types';
 
 @Component({
   selector: 'task',
@@ -22,7 +24,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   @Input() day: any;
   @ViewChild('taskk')
   ref!: ElementRef;
-
+  interactable!: any
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes)
   }
@@ -30,7 +32,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     
     setTimeout(() => {
-      interact(this.ref.nativeElement)
+      this.interactable = interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
           modifiers: [
@@ -52,7 +54,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           ],
           edges: { left: false, right: false, bottom: true, top: true },
         })
-        .on('resizestart', function (event) {
+        .on('resizestart', (event) => {
           console.info('resizestart = ', event);
         })
         .on('resizemove', function (event) {
@@ -86,10 +88,13 @@ export class TaskComponent implements AfterViewInit, OnChanges {
                   // keep the dragged position in the data-x/data-y attributes
                   x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
                   y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                console.log(event.dx);
-                console.log(event.dy);
+                  this.interactable.options.drag.snap.targets = interact.createSnapGrid({
+                    x: 100,
+                    y: 30
+                  })
+              
                 
-              console.log(target);
+              console.log(this.interactable.options.drag.snap.targets);
                   
                 // translate the element
                 target.style.webkitTransform = target.style.transform =
@@ -106,10 +111,11 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           modifiers: [
             interact.modifiers.snap({
               targets: [
-                interact.snappers.grid({
-                  x: this.ref.nativeElement.offsetWidth,
-                  y: 30,
-                }),
+                // interact.snappers.grid({
+                //   x: this.ref.nativeElement.offsetWidth,
+                //   y: 30,
+                // }),
+                interact.createSnapGrid({x: 160, y: 30})
               ],
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],

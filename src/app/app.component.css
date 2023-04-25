@@ -17,7 +17,6 @@
 .day {
     height: 60px;
     min-width: 60px;
-    border-bottom:1px solid #eae7ec;
     border-left: 1px solid #eae7ec;
     display: flex;
     flex-flow: column nowrap;
@@ -27,6 +26,7 @@
 .timeslot {
     flex: 1 0 0;
     z-index: 100;
+    border-bottom:1px solid #eae7ec;
 }
 
 .task-container {
