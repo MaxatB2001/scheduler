@@ -30,8 +30,11 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-
+    console.log((new Date()).toString());
+    
     setTimeout(() => {
+      console.log(this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode);
+      
       this.interactable = interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
@@ -58,7 +61,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           console.info('resizestart = ', event);
         })
         .on('resizemove', function (event) {
-          console.info('resizemove = ', event);
+          // console.info('resizemove = ', event);
           var target = event.target,
             x = parseFloat(target.getAttribute('data-x')) || 0,
             y = parseFloat(target.getAttribute('data-y')) || 0;
@@ -67,8 +70,15 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           target.style.height = event.rect.height + 'px';
 
           // translate when resizing from top or left edges
+          // console.log(event.deltaRect.top);
+          
           x += event.deltaRect.left;
           y += event.deltaRect.top;
+          // console.log(x);
+          // console.log(y);
+          // console.log(event.rect.height);
+          
+          console.log(event.deltaRect)
 
           target.style.webkitTransform = target.style.transform =
             'translate(' + x + 'px,' + y + 'px)';
@@ -77,7 +87,10 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           target.setAttribute('data-y', y);
         })
         .on('resizeend', function (event) {
-          console.log('end');
+          // console.log(event.deltaRect)
+          const end = (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
+                     Math.pow(event.pageY - event.y0, 2) | 0))
+            .toFixed(2)
           console.log(event);
         })
         .draggable({
@@ -99,7 +112,7 @@ export class TaskComponent implements AfterViewInit, OnChanges {
                 target.setAttribute('data-y', y);
             },
             end: (event) => {
-              console.log(event);
+              // console.log(event);
             },
           },
           modifiers: [

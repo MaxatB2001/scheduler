@@ -10,9 +10,7 @@ export class DateService {
 
   constructor() { }
 
-  getCurrentWeek() {
-    let currentDate = moment();
-  
+  getCurrentWeek(currentDate: any) {
     let weekStart = currentDate.clone().startOf('isoWeek');
     let weekEnd = currentDate.clone().endOf('isoWeek');
   
@@ -20,15 +18,25 @@ export class DateService {
   
     for (let i = 0; i <= 6; i++) {
       days.push(moment(weekStart).add(i, 'days'));
-    }
-    mockTasks.forEach(task => {
-      console.log(moment(task.date).format("hh:mm"));
       
-    })
+    }
+    // days.push(currentDate)
+    console.log(days);
+    
     return days;
   }
 
-  getTimePercent(time: any) {
-    
+  getCurrentDay() {
+
+  }
+
+  getCurrentMonth(currentDay: moment.Moment) {
+    let daysInMonth = currentDay.daysInMonth()
+    const arrDays = []
+    for (let i = 1; i <= daysInMonth; i++) {
+      let current = moment().date(i).month(currentDay.month())
+      arrDays.push(current)
+    }
+    return arrDays
   }
 }

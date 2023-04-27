@@ -8,7 +8,7 @@
 .day-column {
     display: flex;
     flex: 1 1 auto;
-    width: 60px;
+    width: 45px;
     flex-direction: column;
     min-height: 100%;
     position: relative;
@@ -16,7 +16,7 @@
 
 .day {
     height: 60px;
-    min-width: 60px;
+    min-width: 45px;
     border-left: 1px solid #eae7ec;
     display: flex;
     flex-flow: column nowrap;
@@ -80,17 +80,7 @@
 .header-day {
     padding: 5px;
     flex: 1 1 0px;
-    min-width: 60px;
+    min-width: 45px;
     border-left:1px solid #eae7ec;
     /* padding: 10px; */
-}
-
-.navbar {
-    display: flex; 
-    align-items: center;
-}
-.date-changer {
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }

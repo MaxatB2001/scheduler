@@ -1,6 +1,6 @@
 .task {
     width: 100%;
-    background-color: lightgray;
+    background-color: rgb(3 155 229);
     border-radius: 4px;
     cursor: pointer;
     position: absolute;
@@ -12,4 +12,5 @@
     -webkit-user-select: none;
     -o-user-select: none;
     user-select: none;
+    color: white;
 }

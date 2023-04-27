@@ -1,48 +1,47 @@
 <mat-sidenav-container>
-  <mat-sidenav style="width: 20%;" position="end" #sidenav mode="side" [(opened)]="opened">
+  <mat-sidenav
+    style="width: 20%"
+    position="end"
+    #sidenav
+    mode="side"
+    [(opened)]="opened"
+    contenteditable
+    (input)="onTextChange($event.target)"
+  >
     заметки
   </mat-sidenav>
   <mat-sidenav-content>
-    <div class="header">
-      <div class="box"></div>
-      <div class="header-days">
-        <div (click)="changeTasks()" class="header-day" *ngFor="let day of days">
-          {{ day.date() + " " + day.format("dddd") }}
-        </div>
-      </div>
-    </div>
-    <div class="main-container">
-      <div class="time-container">
-        <div class="hour" *ngFor="let hour of hours; let i = index">
-          {{ formatHours(hour) }}
-        </div>
-      </div>
-      <div class="schedule">
-        <div class="day-column" *ngFor="let day of days">
-          <div  
-            class="day"
-            *ngFor="let hour of hours"
+    <div class="navbar">
+      <div>
+        <button mat-stroked-button [matMenuTriggerFor]="menu">
+          {{ activeDaysMenu }}
+        </button>
+        <mat-menu #menu="matMenu">
+          <button
+            (click)="changeActiveDay(item)"
+            *ngFor="let item of daysMenu"
+            mat-menu-item
           >
-            <div
-              class="timeslot"
-              [ngStyle]="{
-                'background-color':
-                  hour > 17 || hour < 8 || day.day() > 5 || day.day() == 0 || hour == 13
-                    ? '#ABBDDF'
-                    : 'white'
-              }"
-              *ngFor="let timeslot of timeslotCount; let i = index"
-              (mousedown)="addTask($event, day, hour, i)"
-            ></div>
-          </div>
-          <div class="task-container">
-            <ng-container *ngFor="let task of tasks">
-              <task (dblclick)="opened = !opened" [task]="task" [day]="day" *ngIf="compareDate(task, day)"></task>
-            </ng-container>
-          </div>
-        </div>
+            {{ item }}
+          </button>
+        </mat-menu>
       </div>
+      <div class="date-changer">
+        <button (click)="removeDay()" mat-icon-button>
+          <mat-icon fontIcon="arrow_back_ios"></mat-icon>
+        </button>
+        <span>{{moment(currentDay).format("DD MMMM YYYY")}}</span>
+        <button (click)="addDay()" mat-icon-button>
+          <mat-icon fontIcon="arrow_forward_ios"></mat-icon>
+        </button>
+      </div>
+      <button (click)="setCurrentDay()" mat-stroked-button>Сегодня</button>
     </div>
-    
+    <schedule
+      [opened]="opened"
+      [activeDaysMenu]="activeDaysMenu"
+      (openedChange)="changeOpened()"
+      [currentDay]="currentDay"
+    ></schedule>
   </mat-sidenav-content>
 </mat-sidenav-container>
