@@ -3,14 +3,14 @@ import { DateService } from './services/date-service.service';
 import { Task } from './models/Task.model';
 import { mockTasks } from 'src/data/tasks';
 import * as moment from 'moment';
-import { BehaviorSubject } from 'rxjs';
+import { ReportDataService } from './services/report-data.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   days: any[] = [];
   hours: number[] = [];
   timeslotCount: number[] = [1, 2];
@@ -20,6 +20,13 @@ export class AppComponent {
   activeDaysMenu = "Неделя"
   currentDay: moment.Moment = moment() ;
   moment = moment
+  taskData: Task | null = null;
+
+  constructor(private reportDataService: ReportDataService) {}
+
+  ngOnInit(): void {
+    this.reportDataService.report$.subscribe(data => this.taskData = data)
+  }
 
   changeOpened() {
     this.opened = !this.opened

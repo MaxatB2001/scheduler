@@ -13,6 +13,7 @@ import * as moment from 'moment';
 import interact from 'interactjs';
 import { Interactable } from '@interactjs/types';
 import { Modifier } from '@interactjs/modifiers/types';
+import { ReportServiceService } from 'src/app/services/report-service.service';
 
 @Component({
   selector: 'task',
@@ -24,17 +25,17 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   @Input() day: any;
   @ViewChild('taskk')
   ref!: ElementRef;
-  interactable!: any
+  interactable!: any;
+  currentWidth!: number;
+
+  constructor(private reportService: ReportServiceService) {}
+
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
+    // console.log(changes)
   }
 
   ngAfterViewInit(): void {
-    console.log((new Date()).toString());
-    
     setTimeout(() => {
-      console.log(this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode);
-      
       this.interactable = interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
@@ -44,9 +45,11 @@ export class TaskComponent implements AfterViewInit, OnChanges {
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],
               origin: {
-                x: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetLeft,
-                y: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetTop
-              }
+                x: this.ref.nativeElement.parentNode.parentNode.parentNode
+                  .parentNode.offsetLeft,
+                y: this.ref.nativeElement.parentNode.parentNode.parentNode
+                  .parentNode.offsetTop,
+              },
             }),
             interact.modifiers.restrictSize({
               min: { width: this.ref.nativeElement.offsetWidth, height: 30 },
@@ -61,24 +64,18 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           console.info('resizestart = ', event);
         })
         .on('resizemove', function (event) {
-          // console.info('resizemove = ', event);
           var target = event.target,
             x = parseFloat(target.getAttribute('data-x')) || 0,
             y = parseFloat(target.getAttribute('data-y')) || 0;
-
-          // update the element's style
           target.style.height = event.rect.height + 'px';
 
-          // translate when resizing from top or left edges
-          // console.log(event.deltaRect.top);
-          
           x += event.deltaRect.left;
           y += event.deltaRect.top;
           // console.log(x);
           // console.log(y);
           // console.log(event.rect.height);
-          
-          console.log(event.deltaRect)
+
+          // console.log(event.deltaRect);
 
           target.style.webkitTransform = target.style.transform =
             'translate(' + x + 'px,' + y + 'px)';
@@ -86,50 +83,90 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           target.setAttribute('data-x', x);
           target.setAttribute('data-y', y);
         })
-        .on('resizeend', function (event) {
-          // console.log(event.deltaRect)
-          const end = (Math.sqrt(Math.pow(event.pageX - event.x0, 2) +
-                     Math.pow(event.pageY - event.y0, 2) | 0))
-            .toFixed(2)
-          console.log(event);
+        .on('resizeend', (event) => {
+          const end = Math.sqrt(
+            (Math.pow(event.pageX - event.x0, 2) +
+              Math.pow(event.pageY - event.y0, 2)) |
+              0
+          ).toFixed(2);
+          if (event.deltaRect.bottom > 0) {
+            this.task.duration += Math.round(Number(end));
+            this.changeDuration(this.task.duration);
+          } else if (event.deltaRect.bottom < 0) {
+            this.task.duration -= Math.round(Number(end));
+            this.changeDuration(this.task.duration);
+          } else if (event.deltaRect.top > 0) {
+            this.task.date = moment(this.task.date)
+              .add(Math.floor(Number(end) / 30) * 30, 'minutes')
+              .toDate();
+            this.task.duration -= Math.floor(Number(end) / 30) * 30;
+            this.changeDate(this.task.date);
+            this.changeDuration(this.task.duration);
+          } else if (event.deltaRect.top < 0) {
+            this.task.date = moment(this.task.date)
+              .subtract(Math.floor(Number(end) / 30) * 30, 'minutes')
+              .toDate();
+            this.task.duration += Math.floor(Number(end) / 30) * 30;
+            this.changeDate(this.task.date);
+            this.changeDuration(this.task.duration);
+          }
         })
         .draggable({
           listeners: {
             move: (event) => {
-                var target = event.target,
-                  // keep the dragged position in the data-x/data-y attributes
-                  x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                  y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                
-              console.log(this.interactable.options.drag.modifiers[0].options.targets);
-                  
-                // translate the element
-                target.style.webkitTransform = target.style.transform =
-                  'translate(' + x + 'px, ' + y + 'px)';
-            
-                // update the posiion attributes
-                target.setAttribute('data-x', x);
-                target.setAttribute('data-y', y);
+              var target = event.target,
+                x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+              console.log(event);
+              target.style.webkitTransform = target.style.transform =
+                'translate(' + x + 'px, ' + y + 'px)';
+              target.setAttribute('data-x', x);
+              target.setAttribute('data-y', y);
             },
             end: (event) => {
-              // console.log(event);
+              const end = Math.sqrt(
+                (Math.pow(event.pageX - event.x0, 2) +
+                  Math.pow(event.pageY - event.y0, 2)) |
+                  0
+              ).toFixed(2);
+              if (event.velocity.x > 0) {
+                this.task.date = moment(this.task.date)
+                  .add(Math.round(Number(end) / this.currentWidth), 'day')
+                  .toDate();
+                this.changeDate(this.task.date);
+              } else if (event.velocity.x < 0) {
+                this.task.date = moment(this.task.date)
+                  .add(Math.round(-Number(end) / this.currentWidth), 'day')
+                  .toDate();
+                this.changeDate(this.task.date);
+              } else if (event.velocity.y < 0) {
+                this.task.date = moment(this.task.date)
+                  .subtract(Math.floor(Number(end) / 30) * 30, 'minutes')
+                  .toDate();
+                this.changeDate(this.task.date);
+                console.log(this.task.date);
+                
+              } else if (event.velocity.y > 0) {
+                console.log('bot');
+              }
             },
           },
           modifiers: [
             interact.modifiers.snap({
               targets: [
-                // interact.snappers.grid({
-                //   x: this.ref.nativeElement.offsetWidth,
-                //   y: 30,
-                // }),
-                interact.createSnapGrid({x: this.ref.nativeElement.offsetWidth, y: 30})
+                interact.createSnapGrid({
+                  x: this.ref.nativeElement.offsetWidth,
+                  y: 30,
+                }),
               ],
               range: Infinity,
               relativePoints: [{ x: 0, y: 0 }],
               origin: {
-                x: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetLeft,
-                y: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.offsetTop
-              }
+                x: this.ref.nativeElement.parentNode.parentNode.parentNode
+                  .parentNode.offsetLeft,
+                y: this.ref.nativeElement.parentNode.parentNode.parentNode
+                  .parentNode.offsetTop,
+              },
             }),
             interact.modifiers.restrict({
               restriction:
@@ -140,27 +177,42 @@ export class TaskComponent implements AfterViewInit, OnChanges {
             }),
           ],
           inertia: false,
-          autoScroll: true
-          // autoScroll: {
-          //   container: this.ref.nativeElement.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode,
-          //   margin: 50,
-          //   distance: 5,
-          //   interval: 10,
-          //   speed: 300,
-          // },
+          autoScroll: true,
         });
-    
-        const out = () => {
-          this.interactable.options.drag.modifiers[0].options.targets = [ interact.createSnapGrid({x: this.ref.nativeElement.offsetWidth, y: 30})]
-        }
-        out()
-        new ResizeObserver(out).observe(this.ref.nativeElement)
-      });
+
+      const out = () => {
+        this.currentWidth = this.ref.nativeElement.offsetWidth;
+        this.interactable.options.drag.modifiers[0].options.targets = [
+          interact.createSnapGrid({
+            x: this.ref.nativeElement.offsetWidth,
+            y: 30,
+          }),
+        ];
+      };
+      out();
+      new ResizeObserver(out).observe(this.ref.nativeElement);
+    });
   }
 
   calculateTop() {
     return (
       moment(this.task.date).hours() * 60 + moment(this.task.date).minutes()
     );
+  }
+
+  changeDate(date: Date) {
+    if (this.task.id) {
+      this.reportService
+        .updateReport(this.task.id, { date })
+        .subscribe((data) => console.log(data));
+    }
+  }
+
+  changeDuration(duration: number) {
+    if (this.task.id) {
+      this.reportService
+        .updateReport(this.task.id, { duration })
+        .subscribe((data) => console.log(data));
+    }
   }
 }

@@ -39,7 +39,7 @@
         <div class="task-container">
           <ng-container *ngFor="let task of tasks">
             <task
-              (dblclick)="openedChange.emit()"
+              (dblclick)="showTaskData(task)"
               [task]="task"
               [day]="day"
               *ngIf="(task | compareDate: day)"

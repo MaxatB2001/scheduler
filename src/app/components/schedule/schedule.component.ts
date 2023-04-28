@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import * as moment from 'moment';
 import { Task } from 'src/app/models/Task.model';
 import { DateService } from 'src/app/services/date-service.service';
+import { ReportDataService } from 'src/app/services/report-data.service';
 import { ReportServiceService } from 'src/app/services/report-service.service';
-import { mockTasks } from 'src/data/tasks';
 
 @Component({
   selector: 'schedule',
@@ -21,7 +21,7 @@ export class ScheduleComponent implements OnInit {
   daysMenu = ["День", "Неделя", "Месяц"]
   @Input() activeDaysMenu!: string
 
-  constructor(private dateService: DateService, private reportService: ReportServiceService) {}
+  constructor(private dateService: DateService, private reportService: ReportServiceService, private reportDataService: ReportDataService) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['currentDay']) {
       if (this.activeDaysMenu == "День") {
@@ -104,4 +104,9 @@ export class ScheduleComponent implements OnInit {
       date: new Date(2023, 4, 17, 0)
   },)
   }
+
+  showTaskData(task: Task) {
+    this.reportDataService.setReport(task)
+    this.openedChange.emit()
+  } 
 }

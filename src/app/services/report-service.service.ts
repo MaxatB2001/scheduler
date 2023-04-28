@@ -18,7 +18,11 @@ export class ReportServiceService {
     return this.http.post<Task>("http://localhost:48150/api/task-manager/reports", body)
   }
 
-  updateReport(id: number, body: Task): Observable<any> {
+  updateReport(id: number, body: any): Observable<any> {
     return this.http.patch(`http://localhost:48150/api/task-manager/reports/${id}`, body)
+  }
+
+  getReport(id: number): Observable<Task> {
+    return this.http.get<Task>("")
   }
 }

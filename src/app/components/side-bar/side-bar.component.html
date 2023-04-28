@@ -1,0 +1,40 @@
+<div *ngIf="task" class="main">
+    <input class="title-input" [(ngModel)]="task.title" (ngModelChange)="updateTaskTitle($event)"/>
+    <div class="dates">
+        <mat-icon fontIcon="access_time"></mat-icon>
+        <div class="date">{{moment(task.date).format('LT')}}</div>
+        <div>-</div>
+        <div class="date">{{moment(task.date).add(task.duration, "minutes").format('LT')}}</div>
+    </div>
+    <mat-form-field>
+        <mat-label>Виды работ</mat-label>
+        <input type="text"
+           placeholder="Pick one"
+           aria-label="Number"
+           matInput
+           [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let workType of workTypes" [value]="workType">
+                {{workType}}
+              </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <!-- <mat-form-field>
+        <mat-label>Виды работ</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let workType of workTypes" [value]="workType">{{workType}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Работа</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let work of works" [value]="work">{{work}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Работа</mat-label>
+        <mat-select>
+            <mat-option *ngFor="let p of place" [value]="p">{{p}}</mat-option>
+        </mat-select>
+    </mat-form-field> -->
+</div>

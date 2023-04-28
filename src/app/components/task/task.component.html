@@ -1,1 +1,1 @@
-<div #taskk class="task" style="width: 100%;" [style.height]="task.duration + 'px'" [style.top]="calculateTop() + 'px'">{{task.title}}</div>
+<div #taskk class="task" style="width: 100%;" [style.height]="task.duration + 'px'" [style.top]="(task | calculateTop)">{{task.title}}</div>

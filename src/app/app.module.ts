@@ -16,13 +16,20 @@ import { CompareDatePipe } from './pipes/compare-date.pipe';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { initializeKeycloak } from './keycloak/keycloak-init.factory';
+import { CalculateTopPipe } from './pipes/calculate-top.pipe';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { FormsModule } from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     TaskComponent,
     ScheduleComponent,
-    CompareDatePipe
+    CompareDatePipe,
+    CalculateTopPipe,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +40,10 @@ import { initializeKeycloak } from './keycloak/keycloak-init.factory';
     MatMenuModule,
     MatIconModule,
     HttpClientModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    FormsModule,
+    MatSelectModule,
+    MatAutocompleteModule
   ],
   providers: [{
     provide: APP_INITIALIZER,

@@ -5,10 +5,9 @@
     #sidenav
     mode="side"
     [(opened)]="opened"
-    contenteditable
-    (input)="onTextChange($event.target)"
+    [fixedInViewport]="true"
   >
-    заметки
+    <side-bar></side-bar>
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="navbar">
