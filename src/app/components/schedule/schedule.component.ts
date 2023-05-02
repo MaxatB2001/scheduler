@@ -13,13 +13,15 @@ import { ReportServiceService } from 'src/app/services/report-service.service';
 export class ScheduleComponent implements OnInit {
   days: any[] = [];
   hours: number[] = [];
+  showHours: number[] = []
   timeslotCount: number[] = [1, 2];
   @Input() currentDay!: moment.Moment;
-  tasks!: Task[];
+  @Input() tasks!: Task[];
   @Input() opened!: boolean;
   @Output() openedChange = new EventEmitter<boolean>()
   daysMenu = ["День", "Неделя", "Месяц"]
   @Input() activeDaysMenu!: string
+  updateTaskDate!: Function
 
   constructor(private dateService: DateService, private reportService: ReportServiceService, private reportDataService: ReportDataService) {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -29,9 +31,7 @@ export class ScheduleComponent implements OnInit {
       } else if (this.activeDaysMenu == "Неделя") {
         this.days = this.dateService.getCurrentWeek(this.currentDay)
       } else if (this.activeDaysMenu == "Месяц") {
-        this.days = this.dateService.getCurrentMonth(this.currentDay)
-        console.log(this.days);
-        
+        this.days = this.dateService.getCurrentMonth(this.currentDay)        
       }
       
     }
@@ -48,13 +48,6 @@ export class ScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reportService.getAllReports().subscribe(data => {
-      this.tasks = data
-      console.log(this.tasks.forEach(d => {
-        console.log(moment(d.date).month())
-      }));
-      
-    })
     this.days = this.dateService.getCurrentWeek(this.currentDay);
     this.hours = Array(24)
       .fill(1)
@@ -62,6 +55,15 @@ export class ScheduleComponent implements OnInit {
     this.days.map(d => {
       console.log(d.format("MMMM"))
     })
+    this.showHours = Array(23)
+    .fill(1)
+    .map((x, i) => ++i);
+    this.showHours.unshift(24)
+
+    this.updateTaskDate = (id: number, newDate: Date) => {
+      const index = this.tasks.findIndex((obj => obj.id == id))
+      this.tasks[index].date = newDate
+    }
   }
 
   onClick(time: Date) {
@@ -71,7 +73,7 @@ export class ScheduleComponent implements OnInit {
   }
 
 
-  formatHours(hours: number) {
+  formatHours(hours: number) {    
     return moment.utc(hours*3600*1000).format('HH:mm')
   }
 
@@ -87,7 +89,7 @@ export class ScheduleComponent implements OnInit {
         ? new Date(day.year(), day.month() + 1, day.date(), hours)
         : new Date(day.year(), day.month() + 1, day.date(), hours, minutes);
     this.reportService.createReport({
-      title: 'none',
+      title: 'нет заголовка',
       date,
       duration: 30,
     }).subscribe(data => this.tasks.push(data))

@@ -82,12 +82,17 @@
     flex: 1 1 0px;
     min-width: 60px;
     border-left:1px solid #eae7ec;
-    /* padding: 10px; */
 }
 
 .navbar {
     display: flex; 
     align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    background-color: white;
+    width: 100%;
+    border-bottom:1px solid #eae7ec;
 }
 .date-changer {
     display: flex;

@@ -37,3 +37,24 @@
   line-height: 24px;
 }
 
+.work-types {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.work-types-list {
+  flex: 1 1 auto;
+}
+
+.description {
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 400;
+  color: gray;
+  border-color: lightgray;
+  outline-color: lightskyblue;
+}

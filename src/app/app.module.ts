@@ -18,9 +18,12 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { initializeKeycloak } from './keycloak/keycloak-init.factory';
 import { CalculateTopPipe } from './pipes/calculate-top.pipe';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import {MatInputModule} from '@angular/material/input';
+import { FormatHoursPipe } from './pipes/format-hours.pipe';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ScheduleComponent,
     CompareDatePipe,
     CalculateTopPipe,
-    SideBarComponent
+    SideBarComponent,
+    FormatHoursPipe
   ],
   imports: [
     BrowserModule,
@@ -43,14 +47,22 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     KeycloakAngularModule,
     FormsModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule 
   ],
   providers: [{
     provide: APP_INITIALIZER,
     useFactory: initializeKeycloak,
     multi: true,
     deps: [KeycloakService]
-  }],
+  },
+  MatDatepickerModule,
+    MatNativeDateModule ,
+    { provide: MAT_DATE_LOCALE, useValue: 'ru' }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

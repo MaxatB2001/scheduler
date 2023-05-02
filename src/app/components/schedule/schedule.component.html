@@ -6,15 +6,17 @@
         class="header-day"
         *ngFor="let day of days"
       >
-        <!-- {{ day.date() + " " + day.format("dddd") }} -->
+      <div>{{day.format("dd") }}</div>
+        <div>
         {{day.date()}}
+        </div>
       </div>
     </div>
   </div>
   <div class="main-container">
     <div class="time-container">
-      <div class="hour" *ngFor="let hour of hours; let i = index">
-        {{ formatHours(hour) }}
+      <div class="hour" *ngFor="let hour of showHours; let i = index">
+        {{ hour | formatHours }}
       </div>
     </div>
     <div class="schedule">
@@ -43,6 +45,7 @@
               [task]="task"
               [day]="day"
               *ngIf="(task | compareDate: day)"
+              [updateTaskDate]="updateTaskDate"
             ></task>
           </ng-container>
         </div>

@@ -7,7 +7,10 @@
     [(opened)]="opened"
     [fixedInViewport]="true"
   >
-    <side-bar></side-bar>
+    <side-bar
+      [removeReport]="removeReport"
+      (openedChange)="changeOpened()"
+    ></side-bar>
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="navbar">
@@ -29,7 +32,11 @@
         <button (click)="removeDay()" mat-icon-button>
           <mat-icon fontIcon="arrow_back_ios"></mat-icon>
         </button>
-        <span>{{moment(currentDay).format("DD MMMM YYYY")}}</span>
+        <span (click)="picker.open()" style="position: relative; cursor: pointer; font-weight: 500;">
+          {{ moment(currentDay).format("DD MMMM YYYY") }}
+          <input (dateChange)="changeDate($event)" style="visibility: hidden; position: absolute; left: 0; top: 0; right: 0; bottom: 0;" [matDatepicker]="picker">
+        </span>
+        <mat-datepicker [startAt]="currentDay.toDate()" #picker></mat-datepicker>
         <button (click)="addDay()" mat-icon-button>
           <mat-icon fontIcon="arrow_forward_ios"></mat-icon>
         </button>
@@ -41,6 +48,7 @@
       [activeDaysMenu]="activeDaysMenu"
       (openedChange)="changeOpened()"
       [currentDay]="currentDay"
+      [tasks]="tasks"
     ></schedule>
   </mat-sidenav-content>
 </mat-sidenav-container>

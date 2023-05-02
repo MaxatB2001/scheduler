@@ -27,7 +27,8 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   ref!: ElementRef;
   interactable!: any;
   currentWidth!: number;
-
+  @Input() updateTaskDate!: Function
+ 
   constructor(private reportService: ReportServiceService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -36,6 +37,8 @@ export class TaskComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      console.log(this.ref.nativeElement.parentNode.parentNode.parentNode
+        .parentNode)
       this.interactable = interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
@@ -71,11 +74,6 @@ export class TaskComponent implements AfterViewInit, OnChanges {
 
           x += event.deltaRect.left;
           y += event.deltaRect.top;
-          // console.log(x);
-          // console.log(y);
-          // console.log(event.rect.height);
-
-          // console.log(event.deltaRect);
 
           target.style.webkitTransform = target.style.transform =
             'translate(' + x + 'px,' + y + 'px)';
@@ -84,16 +82,21 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           target.setAttribute('data-y', y);
         })
         .on('resizeend', (event) => {
+          let moveY = event.pageY - event.y0
+          console.log(moveY);
+          
           const end = Math.sqrt(
             (Math.pow(event.pageX - event.x0, 2) +
               Math.pow(event.pageY - event.y0, 2)) |
               0
           ).toFixed(2);
+          console.log(Math.round(Number(end)));
+          
           if (event.deltaRect.bottom > 0) {
-            this.task.duration += Math.round(Number(end));
+            this.task.duration += moveY
             this.changeDuration(this.task.duration);
           } else if (event.deltaRect.bottom < 0) {
-            this.task.duration -= Math.round(Number(end));
+            this.task.duration += moveY
             this.changeDuration(this.task.duration);
           } else if (event.deltaRect.top > 0) {
             this.task.date = moment(this.task.date)
@@ -117,38 +120,24 @@ export class TaskComponent implements AfterViewInit, OnChanges {
               var target = event.target,
                 x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
                 y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-              console.log(event);
               target.style.webkitTransform = target.style.transform =
                 'translate(' + x + 'px, ' + y + 'px)';
               target.setAttribute('data-x', x);
               target.setAttribute('data-y', y);
             },
             end: (event) => {
-              const end = Math.sqrt(
-                (Math.pow(event.pageX - event.x0, 2) +
-                  Math.pow(event.pageY - event.y0, 2)) |
-                  0
-              ).toFixed(2);
-              if (event.velocity.x > 0) {
-                this.task.date = moment(this.task.date)
-                  .add(Math.round(Number(end) / this.currentWidth), 'day')
-                  .toDate();
-                this.changeDate(this.task.date);
-              } else if (event.velocity.x < 0) {
-                this.task.date = moment(this.task.date)
-                  .add(Math.round(-Number(end) / this.currentWidth), 'day')
-                  .toDate();
-                this.changeDate(this.task.date);
-              } else if (event.velocity.y < 0) {
-                this.task.date = moment(this.task.date)
-                  .subtract(Math.floor(Number(end) / 30) * 30, 'minutes')
-                  .toDate();
-                this.changeDate(this.task.date);
-                console.log(this.task.date);
-                
-              } else if (event.velocity.y > 0) {
-                console.log('bot');
+              let moveX = event.pageX - event.x0
+              let moveY = event.pageY - event.y0
+              this.task.date = moment(this.task.date).add(Math.round(moveX / this.currentWidth), "day").toDate()
+              if (moveY !== 0) {
+                if (moveY > 0) {
+                  this.task.date = moment(this.task.date).add(moveY / 30 * 30, "minutes").toDate()
+                } else {
+                  this.task.date = moment(this.task.date).subtract(-(moveY / 30 * 30), "minutes").toDate()
+                }
               }
+              this.changeDate(this.task.date)
+              this.updateTaskDate(this.task.id, this.task.date)
             },
           },
           modifiers: [

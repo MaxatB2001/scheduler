@@ -49,6 +49,7 @@
 .main-container {
     display: flex;
     flex: 1 1 auto;
+    margin-top: 98px;
 }
 
 
@@ -65,6 +66,11 @@
     display: flex;
     width: 100%;
     border-bottom:1px solid #eae7ec;
+    position: fixed;
+    top: 48px;
+    width: 100%;
+    background-color: white;
+    z-index: 100000;
 }
 
 .box {
@@ -74,7 +80,6 @@
 .header-days {
     display: flex;
     width: 100%;
-
 }
 
 .header-day {
@@ -82,5 +87,8 @@
     flex: 1 1 0px;
     min-width: 45px;
     border-left:1px solid #eae7ec;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     /* padding: 10px; */
 }

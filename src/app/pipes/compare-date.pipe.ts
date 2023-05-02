@@ -9,12 +9,7 @@ import * as moment from 'moment';
 export class CompareDatePipe implements PipeTransform {
 
   transform(task: Task, day: any): boolean {
-    // console.log(moment(task.date).format("MMMM") + "  task");
-    // console.log(day.month());
-    // console.log(moment(task.date).month() + 1 == day.month());
-    // console.log(moment(task.date).month());
-    // console.log(day)
-    return moment(task.date).date() == day.date()  && moment(task.date).month() == day.month() + 1;
+    return moment(task.date).date() == day.date()  && moment(task.date).month() == day.month() + 1 && moment(task.date).year() == day.year();
   }
 
 }

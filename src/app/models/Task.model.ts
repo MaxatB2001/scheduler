@@ -9,5 +9,6 @@ export interface Task {
     date: Date;
     work?: Work | null,
     workType?: WorkTypes | null,
-    place?: Place | null
+    place?: Place | null,
+    description?: string | null
 }

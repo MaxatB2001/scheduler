@@ -25,4 +25,8 @@ export class ReportServiceService {
   getReport(id: number): Observable<Task> {
     return this.http.get<Task>("")
   }
+
+  deleteReport(id: number): Observable<any> {
+    return this.http.delete(`http://localhost:48150/api/task-manager/reports/${id}`)
+  }
 }

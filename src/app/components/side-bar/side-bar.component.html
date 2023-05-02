@@ -1,40 +1,102 @@
 <div *ngIf="task" class="main">
-    <input class="title-input" [(ngModel)]="task.title" (ngModelChange)="updateTaskTitle($event)"/>
-    <div class="dates">
-        <mat-icon fontIcon="access_time"></mat-icon>
-        <div class="date">{{moment(task.date).format('LT')}}</div>
-        <div>-</div>
-        <div class="date">{{moment(task.date).add(task.duration, "minutes").format('LT')}}</div>
+  <input
+    class="title-input"
+    [(ngModel)]="task.title"
+    (ngModelChange)="updateTaskTitle($event)"
+  />
+  <div class="work-types">
+    <mat-icon
+      [ngStyle]="{ color: 'gray' }"
+      fontIcon="calendar_today"
+    ></mat-icon>
+    <div style="font-weight: bold">{{ moment(task.date).format("ll") }}</div>
+  </div>
+  <div class="dates">
+    <mat-icon [ngStyle]="{ color: 'gray' }" fontIcon="access_time"></mat-icon>
+    <div class="date">{{ moment(task.date).format("LT") }}</div>
+    <div>-</div>
+    <div class="date">
+      {{ moment(task.date).add(task.duration, "minutes").format("LT") }}
     </div>
-    <mat-form-field>
-        <mat-label>Виды работ</mat-label>
-        <input type="text"
-           placeholder="Pick one"
-           aria-label="Number"
-           matInput
-           [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let workType of workTypes" [value]="workType">
-                {{workType}}
-              </mat-option>
-        </mat-autocomplete>
+  </div>
+  <div class="work-types">
+    <mat-icon [ngStyle]="{ color: 'gray' }" fontIcon="engineering"></mat-icon>
+    <mat-form-field class="work-types-list">
+      <mat-label>Работы</mat-label>
+      <input
+        type="text"
+        placeholder="Выберите"
+        aria-label="Number"
+        matInput
+        [formControl]="worksControl"
+        [matAutocomplete]="autoWorks"
+      />
+      <mat-autocomplete #autoWorks="matAutocomplete" (optionSelected)="updateWork($event.option.value)">
+        <mat-option *ngFor="let work of filteredWorks | async" [value]="work">
+          {{ work }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
-    <!-- <mat-form-field>
-        <mat-label>Виды работ</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let workType of workTypes" [value]="workType">{{workType}}</mat-option>
-        </mat-select>
+  </div>
+  <div *ngIf="task.work == 'ТКП'" class="work-types">
+    <mat-icon [ngStyle]="{ color: 'gray' }" fontIcon="work"></mat-icon>
+    <mat-form-field class="work-types-list">
+      <mat-label>Виды работ</mat-label>
+      <input
+        type="text"
+        placeholder="Выберите"
+        aria-label="Number"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateWorkType($event.option.value)">
+        <mat-option
+          *ngFor="let workType of filteredWorkType | async"
+          [value]="workType"
+        >
+          {{ workType }}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
-    <mat-form-field>
-        <mat-label>Работа</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let work of works" [value]="work">{{work}}</mat-option>
-        </mat-select>
+  </div>
+  <div class="work-types" *ngIf="task.work == 'ТКП'">
+    <mat-icon [ngStyle]="{ color: 'gray' }" fontIcon="person"></mat-icon>
+    <mat-form-field class="work-types-list">
+      <mat-label>Выдал задание для ТКП</mat-label>
+      <input matInput>
     </mat-form-field>
-    <mat-form-field>
-        <mat-label>Работа</mat-label>
-        <mat-select>
-            <mat-option *ngFor="let p of place" [value]="p">{{p}}</mat-option>
-        </mat-select>
-    </mat-form-field> -->
+  </div>
+  <div class="work-types">
+    <mat-icon [ngStyle]="{ color: 'gray' }" fontIcon="place"></mat-icon>
+    <mat-form-field class="work-types-list">
+      <mat-label>Размещение</mat-label>
+      <input
+        type="text"
+        placeholder="Выберите"
+        aria-label="Number"
+        matInput
+        [formControl]="placeControl"
+        [matAutocomplete]="autoPlace"
+      />
+      <mat-autocomplete #autoPlace="matAutocomplete" (optionSelected)="updatePlace($event.option.value)">
+        <mat-option *ngFor="let place of filteredPlace | async" [value]="place">
+          {{ place }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div>
+    <div style="text-align: center; font-weight: bold; width: 100%">Отчёт</div>
+    <textarea
+      class="description"
+      rows="6"
+      placeholder="Отчёт о проделанной работе"
+      [(ngModel)]="task.description"
+      (ngModelChange)="updateTaskDescription($event)"
+    ></textarea>
+  </div>
+  <button (click)="deleteReport()" mat-raised-button color="warn">
+    Удалить
+  </button>
 </div>
