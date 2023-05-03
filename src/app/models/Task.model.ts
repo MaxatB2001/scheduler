@@ -10,5 +10,6 @@ export interface Task {
     work?: Work | null,
     workType?: WorkTypes | null,
     place?: Place | null,
-    description?: string | null
+    description?: string | null,
+    issuedTKPTask?: string | null
 }

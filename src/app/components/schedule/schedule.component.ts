@@ -22,6 +22,12 @@ export class ScheduleComponent implements OnInit {
   daysMenu = ["День", "Неделя", "Месяц"]
   @Input() activeDaysMenu!: string
   updateTaskDate!: Function
+  @Input() workStartHours!: number
+  @Input() workStartMinutes!: number
+  @Input() workEndMinutes!: number
+  @Input() workEndHours!: number
+  @Input() dinnerHour!: number
+  compareD = this.dateService.compareDates
 
   constructor(private dateService: DateService, private reportService: ReportServiceService, private reportDataService: ReportDataService) {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,17 +50,23 @@ export class ScheduleComponent implements OnInit {
         this.days = this.dateService.getCurrentMonth(this.currentDay)
       }
     }
-    
+    console.log(this.workStartHours);
+    console.log(this.workEndHours);
   }
 
   ngOnInit(): void {
+    
+    
     this.days = this.dateService.getCurrentWeek(this.currentDay);
     this.hours = Array(24)
       .fill(1)
       .map((x, i) => ++i);
-    this.days.map(d => {
-      console.log(d.format("MMMM"))
-    })
+      const dd = [1, 2]
+      this.hours.forEach(h => {
+        dd.forEach((d, i) => {
+          console.log(`${h}: ${i * 30}`)
+        })
+      })
     this.showHours = Array(23)
     .fill(1)
     .map((x, i) => ++i);
@@ -77,7 +89,10 @@ export class ScheduleComponent implements OnInit {
     return moment.utc(hours*3600*1000).format('HH:mm')
   }
 
-  addTask($event: MouseEvent, day: any, duration: any, timeSlotIndex: any) {    
+  addTask($event: MouseEvent, day: any, duration: any, timeSlotIndex: any) {  
+    console.log(timeSlotIndex);
+    console.log(duration);
+    
     let totalMinutes;
     totalMinutes = duration * 30 * 2 - 30;
     const hours = Math.floor(totalMinutes / 60);
@@ -111,4 +126,14 @@ export class ScheduleComponent implements OnInit {
     this.reportDataService.setReport(task)
     this.openedChange.emit()
   } 
+
+  //  beginningTime = moment({
+  //   h: 8,
+  //   s: 45
+  // });
+  // endTime = moment({
+  //   h: 9,
+  //   s: 0
+  // });
+  // console.log(beginningTime.isBefore(endTime)); 
 }

@@ -93,6 +93,7 @@
     background-color: white;
     width: 100%;
     border-bottom:1px solid #eae7ec;
+    gap: 5px;
 }
 .date-changer {
     display: flex;

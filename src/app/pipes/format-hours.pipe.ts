@@ -8,7 +8,6 @@ import * as moment from 'moment';
 export class FormatHoursPipe implements PipeTransform {
 
   transform(hours: number): unknown {
-    console.log(hours)
     return moment.utc(hours*3600*1000).format('HH:mm')
   }
 

@@ -1,0 +1,21 @@
+    <h1 mat-dialog-title>Настройки</h1>
+    <mat-dialog-content>
+        <div style="display: flex; align-items: center;">
+            <div style="width: 200px;">Начало рабочего дня</div>
+            <ngx-mat-timepicker-field [(ngModel)]="startDate"  (ngModelChange)="startDateChanged($event)" color="primary"
+                           [format]="24"
+                           ></ngx-mat-timepicker-field>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div style="width: 200px;">Конец рабочего дня</div>
+            <ngx-mat-timepicker-field [(ngModel)]="endDate" (ngModelChange)="endDateChanged($event)" color="primary"
+                           [format]="24"
+                           ></ngx-mat-timepicker-field>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div style="width: 200px;">Время обеда</div>
+            <ngx-mat-timepicker-field [(ngModel)]="dinnerTime" (ngModelChange)="dinnerTimeChanged($event)" color="primary"
+                           [format]="24"
+                           ></ngx-mat-timepicker-field>
+        </div>
+    </mat-dialog-content>

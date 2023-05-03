@@ -39,4 +39,19 @@ export class DateService {
     }
     return arrDays
   }
+
+  compareDates(hour1: number, hour2: number, minutes1: number, minutes2: number) {
+     const beginningTime = moment({
+    h: hour1,
+    s: minutes1
+  });
+     const endTime = moment({
+    h: hour2,
+    s: minutes2
+  });
+  console.log(beginningTime);
+  console.log(endTime);
+  
+  console.log(endTime.isBefore(beginningTime)); 
+  }
 }

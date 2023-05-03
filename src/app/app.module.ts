@@ -24,6 +24,9 @@ import {MatInputModule} from '@angular/material/input';
 import { FormatHoursPipe } from './pipes/format-hours.pipe';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import {MatDialogModule} from '@angular/material/dialog';
+import { SettingsComponent } from './components/settings/settings.component';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
     CompareDatePipe,
     CalculateTopPipe,
     SideBarComponent,
-    FormatHoursPipe
+    FormatHoursPipe,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +55,10 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
     ReactiveFormsModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    MatDialogModule,
+    NgxMatTimepickerModule,
+    MatFormFieldModule
   ],
   providers: [{
     provide: APP_INITIALIZER,
