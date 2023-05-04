@@ -7,6 +7,7 @@ export interface Settings {
   workEndHours: number;
   workEndMinutes: number;
   dinnerHour: number;
+  dinnerMinutes: number
 }
 
 @Injectable({
@@ -21,6 +22,7 @@ export class SettingsService {
     workEndHours: 18,
     workEndMinutes: 0,
     dinnerHour: 13,
+    dinnerMinutes: 0
   });
   public settings$: Observable<Settings> = this.settings.asObservable();
 
@@ -42,10 +44,11 @@ export class SettingsService {
     this.settings.next(updated);
   }
 
-  updateDinnerHour(hour: number) {
+  updateDinnerTime(hour: number, minutes: number) {
     const updated: Settings = {
       ...this.settings.getValue(),
-      dinnerHour: hour
+      dinnerHour: hour,
+      dinnerMinutes: minutes
     };
     this.settings.next(updated);
   }

@@ -27,7 +27,9 @@ export class ScheduleComponent implements OnInit {
   @Input() workEndMinutes!: number
   @Input() workEndHours!: number
   @Input() dinnerHour!: number
-  compareD = this.dateService.compareDates
+  @Input() dinnerMinutes!: number
+  isDateBefore = this.dateService.isBefore
+  isDateAfter = this.dateService.isAfter
 
   constructor(private dateService: DateService, private reportService: ReportServiceService, private reportDataService: ReportDataService) {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,8 +52,6 @@ export class ScheduleComponent implements OnInit {
         this.days = this.dateService.getCurrentMonth(this.currentDay)
       }
     }
-    console.log(this.workStartHours);
-    console.log(this.workEndHours);
   }
 
   ngOnInit(): void {
@@ -61,12 +61,6 @@ export class ScheduleComponent implements OnInit {
     this.hours = Array(24)
       .fill(1)
       .map((x, i) => ++i);
-      const dd = [1, 2]
-      this.hours.forEach(h => {
-        dd.forEach((d, i) => {
-          console.log(`${h}: ${i * 30}`)
-        })
-      })
     this.showHours = Array(23)
     .fill(1)
     .map((x, i) => ++i);
@@ -90,14 +84,10 @@ export class ScheduleComponent implements OnInit {
   }
 
   addTask($event: MouseEvent, day: any, duration: any, timeSlotIndex: any) {  
-    console.log(timeSlotIndex);
-    console.log(duration);
-    
     let totalMinutes;
     totalMinutes = duration * 30 * 2 - 30;
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    console.log(day);
     
     let date =
       timeSlotIndex == 0
@@ -108,9 +98,6 @@ export class ScheduleComponent implements OnInit {
       date,
       duration: 30,
     }).subscribe(data => this.tasks.push(data))
-    const createdTask = this.tasks[this.tasks.length - 1]
-    console.log(createdTask);
-
   }
 
   changeTasks() {

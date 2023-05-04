@@ -38,6 +38,6 @@ export class SettingsComponent implements OnInit {
 
   dinnerTimeChanged(time: string) {
     const splitted = time.split(':');
-    this.settingsService.updateDinnerHour(Number(splitted[0]))
+    this.settingsService.updateDinnerTime(Number(splitted[0]), Number(splitted[1]))
   }
 }

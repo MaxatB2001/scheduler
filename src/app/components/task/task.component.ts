@@ -1,18 +1,13 @@
 import {
-  AfterContentInit,
   AfterViewInit,
   Component,
   ElementRef,
   Input,
-  OnChanges,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Task } from 'src/app/models/Task.model';
 import * as moment from 'moment';
 import interact from 'interactjs';
-import { Interactable } from '@interactjs/types';
-import { Modifier } from '@interactjs/modifiers/types';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 
 @Component({
@@ -20,7 +15,7 @@ import { ReportServiceService } from 'src/app/services/report-service.service';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
 })
-export class TaskComponent implements AfterViewInit, OnChanges {
+export class TaskComponent implements AfterViewInit {
   @Input() task!: Task;
   @Input() day: any;
   @ViewChild('taskk')
@@ -30,10 +25,6 @@ export class TaskComponent implements AfterViewInit, OnChanges {
   @Input() updateTaskDate!: Function
  
   constructor(private reportService: ReportServiceService) {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes)
-  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -81,22 +72,18 @@ export class TaskComponent implements AfterViewInit, OnChanges {
           target.setAttribute('data-x', x);
           target.setAttribute('data-y', y);
         })
-        .on('resizeend', (event) => {
-          let moveY = event.pageY - event.y0
-          console.log(moveY);
-          
+        .on('resizeend', (event) => {  
           const end = Math.sqrt(
             (Math.pow(event.pageX - event.x0, 2) +
               Math.pow(event.pageY - event.y0, 2)) |
               0
           ).toFixed(2);
-          console.log(Math.round(Number(end)));
-          
-          if (event.deltaRect.bottom > 0) {
-            this.task.duration += moveY
+      
+          if (event.deltaRect.bottom > 0) {            
+            this.task.duration += Math.trunc((Math.round(Number(end)) / 30)) * 30
             this.changeDuration(this.task.duration);
           } else if (event.deltaRect.bottom < 0) {
-            this.task.duration += moveY
+            this.task.duration -= Math.trunc((Math.round(Number(end)) / 30)) * 30
             this.changeDuration(this.task.duration);
           } else if (event.deltaRect.top > 0) {
             this.task.date = moment(this.task.date)

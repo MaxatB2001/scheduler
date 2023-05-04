@@ -40,18 +40,31 @@ export class DateService {
     return arrDays
   }
 
-  compareDates(hour1: number, hour2: number, minutes1: number, minutes2: number) {
-     const beginningTime = moment({
-    h: hour1,
-    s: minutes1
-  });
-     const endTime = moment({
-    h: hour2,
-    s: minutes2
-  });
-  console.log(beginningTime);
-  console.log(endTime);
-  
-  console.log(endTime.isBefore(beginningTime)); 
+  isBefore(hour1: number, hour2: number, minutes1: number, minutes2: number) {
+    console.log(("before"));
+    
+    const endTime = moment({
+      h: hour1,
+      minutes: minutes1
+    });
+       const beginningTime = moment({
+      h: hour2,
+      minutes: minutes2
+    });
+    return endTime.isBefore(beginningTime)
+  }
+
+  isAfter(hour1: number, hour2: number, minutes1: number, minutes2: any) {
+    console.log("after");
+    
+    const endTime = moment({
+      h: hour1,
+      minutes: minutes1
+    });
+       const beginningTime = moment({
+      h: hour2,
+      minutes: minutes2
+    });
+    return endTime.isAfter(beginningTime)
   }
 }

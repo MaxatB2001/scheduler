@@ -40,6 +40,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   workEndMinutes!: number
   workEndHours!: number
   dinnerHour!: number
+  dinnerMinutes!: number
 
   constructor(
     private reportDataService: ReportDataService,
@@ -48,8 +49,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private settingsService: SettingsService
   ) {}
   ngAfterViewInit(): void {
-    console.log('che');
-
     document.documentElement.scrollTop = document.body.scrollTop = 300;
   }
   ngOnInit(): void {
@@ -59,6 +58,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.workStartMinutes = data.workStartMinutes
       this.workEndMinutes = data.workEndMinutes
       this.dinnerHour = data.dinnerHour
+      this.dinnerMinutes = data.dinnerMinutes
     })
     this.reportDataService.report$.subscribe((data) => (this.taskData = data));
     this.reportService.getAllReports().subscribe((data) => {
@@ -86,7 +86,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.currentDay = moment(this.currentDay).add(1, 'week');
     } else if (this.activeDaysMenu === 'Месяц') {
       this.currentDay = moment(this.currentDay).add(1, 'month');
-      console.log(this.currentDay);
     }
   }
 
@@ -109,7 +108,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   changeDate(event: any) {
-    console.log(event.value);
     this.currentDay = moment(event.value);
   }
 

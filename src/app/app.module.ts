@@ -27,6 +27,8 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import {MatDialogModule} from '@angular/material/dialog';
 import { SettingsComponent } from './components/settings/settings.component';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { IsDateAfterPipe } from './pipes/is-date-after.pipe';
+import { IsDateBeforePipe } from './pipes/is-date-before.pipe';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
     CalculateTopPipe,
     SideBarComponent,
     FormatHoursPipe,
-    SettingsComponent
+    SettingsComponent,
+    IsDateAfterPipe,
+    IsDateBeforePipe
   ],
   imports: [
     BrowserModule,

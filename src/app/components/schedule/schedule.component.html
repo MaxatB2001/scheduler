@@ -1,4 +1,4 @@
-<div class="header" [ngStyle]="{'width': opened ? '80%' : '100%'}">
+<div class="header">
     <div class="box"></div>
     <div class="header-days">
       <div
@@ -27,16 +27,15 @@
             *ngFor="let timeslot of timeslotCount; let i = index"
             [ngStyle]="{
               'background-color':
-                hour > workEndHours ||
-                hour - 1 < workStartHours ||
+                (hour - 1) * 60 + (i * 30) >= workEndHours * 60 + workEndMinutes ||
+                (hour - 1) * 60 + (i * 30) < workStartHours * 60 + workStartMinutes ||
                 day.day() > 5 ||
                 day.day() == 0 ||
-                hour == dinnerHour
+                hour - 1 == dinnerHour
                   ? '#ABBDDF'
                   : 'white'
             }"
             (click)="addTask($event, day, hour, i)"
-            (mouseup)="compareD(hour, workStartHours, (i * 30), workStartMinutes)"
           ></div>
         </div>
         <div class="task-container">

@@ -3,7 +3,7 @@
     style="width: 20%"
     position="end"
     #sidenav
-    mode="side"
+    mode="over"
     [(opened)]="opened"
     [fixedInViewport]="true"
   >
@@ -55,6 +55,7 @@
       [workStartMinutes]="workStartMinutes"
       [workEndMinutes]="workEndMinutes"
       [dinnerHour]="dinnerHour"
+      [dinnerMinutes]="dinnerMinutes"
     ></schedule>
   </mat-sidenav-content>
 </mat-sidenav-container>
