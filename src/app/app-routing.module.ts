@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AuthGuardKeycloak } from './classes/keycloak-auth.guard';
 
-const routes: Routes = [{path: "", component: AppComponent, canActivate: [AuthGuardKeycloak]}];
+const routes: Routes = [];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

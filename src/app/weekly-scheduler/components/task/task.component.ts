@@ -29,7 +29,7 @@ export class TaskComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       console.log(this.ref.nativeElement.parentNode.parentNode.parentNode
-        .parentNode)
+        .parentNode.offsetTop + 50)
       this.interactable = interact(this.ref.nativeElement)
         .resizable({
           preserveAspectRatio: false,
@@ -42,7 +42,7 @@ export class TaskComponent implements AfterViewInit {
                 x: this.ref.nativeElement.parentNode.parentNode.parentNode
                   .parentNode.offsetLeft,
                 y: this.ref.nativeElement.parentNode.parentNode.parentNode
-                  .parentNode.offsetTop,
+                  .parentNode.offsetTop + 50,
               },
             }),
             interact.modifiers.restrictSize({
@@ -78,7 +78,8 @@ export class TaskComponent implements AfterViewInit {
               Math.pow(event.pageY - event.y0, 2)) |
               0
           ).toFixed(2);
-      
+            console.log(Math.trunc((Math.round(Number(end)) / 30)));
+            
           if (event.deltaRect.bottom > 0) {            
             this.task.duration += Math.trunc((Math.round(Number(end)) / 30)) * 30
             this.changeDuration(this.task.duration);
@@ -93,8 +94,11 @@ export class TaskComponent implements AfterViewInit {
             this.changeDate(this.task.date);
             this.changeDuration(this.task.duration);
           } else if (event.deltaRect.top < 0) {
+            console.log("top < 0");
+            console.log();
+            
             this.task.date = moment(this.task.date)
-              .subtract(Math.floor(Number(end) / 30) * 30, 'minutes')
+              .subtract(Math.trunc((Math.round(Number(end)) / 30)) * 30, 'minutes')
               .toDate();
             this.task.duration += Math.floor(Number(end) / 30) * 30;
             this.changeDate(this.task.date);
@@ -115,12 +119,14 @@ export class TaskComponent implements AfterViewInit {
             end: (event) => {
               let moveX = event.pageX - event.x0
               let moveY = event.pageY - event.y0
+              console.log(Math.round(moveY / 30));
+              
               this.task.date = moment(this.task.date).add(Math.round(moveX / this.currentWidth), "day").toDate()
               if (moveY !== 0) {
                 if (moveY > 0) {
-                  this.task.date = moment(this.task.date).add(moveY / 30 * 30, "minutes").toDate()
+                  this.task.date = moment(this.task.date).add(Math.round(moveY / 30) * 30, "minutes").toDate()
                 } else {
-                  this.task.date = moment(this.task.date).subtract(-(moveY / 30 * 30), "minutes").toDate()
+                  this.task.date = moment(this.task.date).subtract(-(Math.round(moveY / 30) * 30), "minutes").toDate()
                 }
               }
               this.changeDate(this.task.date)
@@ -141,7 +147,7 @@ export class TaskComponent implements AfterViewInit {
                 x: this.ref.nativeElement.parentNode.parentNode.parentNode
                   .parentNode.offsetLeft,
                 y: this.ref.nativeElement.parentNode.parentNode.parentNode
-                  .parentNode.offsetTop,
+                  .parentNode.offsetTop + 50,
               },
             }),
             interact.modifiers.restrict({

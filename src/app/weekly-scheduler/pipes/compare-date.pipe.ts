@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Task } from '../models/Task.model';
 import * as moment from 'moment';
+import { Task } from 'src/app/models/Task.model';
 
 @Pipe({
   name: 'compareDate',
