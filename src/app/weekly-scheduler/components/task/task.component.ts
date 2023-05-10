@@ -42,7 +42,7 @@ export class TaskComponent implements AfterViewInit {
                 x: this.ref.nativeElement.parentNode.parentNode.parentNode
                   .parentNode.offsetLeft,
                 y: this.ref.nativeElement.parentNode.parentNode.parentNode
-                  .parentNode.offsetTop + 50,
+                  .parentNode.offsetTop,
               },
             }),
             interact.modifiers.restrictSize({
@@ -116,19 +116,24 @@ export class TaskComponent implements AfterViewInit {
               target.setAttribute('data-x', x);
               target.setAttribute('data-y', y);
             },
-            end: (event) => {
+            end: (event) => {              
               let moveX = event.pageX - event.x0
               let moveY = event.pageY - event.y0
+              console.log(moveY);
+
               console.log(Math.round(moveY / 30));
               
               this.task.date = moment(this.task.date).add(Math.round(moveX / this.currentWidth), "day").toDate()
               if (moveY !== 0) {
                 if (moveY > 0) {
                   this.task.date = moment(this.task.date).add(Math.round(moveY / 30) * 30, "minutes").toDate()
+                  
                 } else {
-                  this.task.date = moment(this.task.date).subtract(-(Math.round(moveY / 30) * 30), "minutes").toDate()
+                  this.task.date = moment(this.task.date).subtract(-(Math.round(moveY / 30) * 30), "minutes").toDate()                  
                 }
               }
+              console.log( this.task.date);
+              
               this.changeDate(this.task.date)
               this.updateTaskDate(this.task.id, this.task.date)
             },
@@ -147,7 +152,7 @@ export class TaskComponent implements AfterViewInit {
                 x: this.ref.nativeElement.parentNode.parentNode.parentNode
                   .parentNode.offsetLeft,
                 y: this.ref.nativeElement.parentNode.parentNode.parentNode
-                  .parentNode.offsetTop + 50,
+                  .parentNode.offsetTop,
               },
             }),
             interact.modifiers.restrict({

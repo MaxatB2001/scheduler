@@ -68,7 +68,9 @@ export class ScheduleComponent implements OnInit {
 
     this.updateTaskDate = (id: number, newDate: Date) => {
       const index = this.tasks.findIndex((obj => obj.id == id))
-      this.tasks[index].date = newDate
+      this.tasks[index] = {...this.tasks[index], date: newDate}
+      this.reportDataService.setReport(this.tasks[index])
+      
     }
   }
 

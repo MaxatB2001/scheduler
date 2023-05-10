@@ -54,12 +54,7 @@ import { WeeklySchedulerModule } from './weekly-scheduler/weekly-scheduler.modul
     NgxMatTimepickerModule,
     MatFormFieldModule
   ],
-  providers: [{
-    provide: APP_INITIALIZER,
-    useFactory: initializeKeycloak,
-    multi: true,
-    deps: [KeycloakService]
-  },
+  providers: [
   MatDatepickerModule,
     MatNativeDateModule ,
     { provide: MAT_DATE_LOCALE, useValue: 'ru' }
